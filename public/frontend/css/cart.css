@@ -1,0 +1,84 @@
+/* Main content styles */
+#MainContent .container{
+    max-width: 1100px;
+}
+main {
+    padding: 40px 0;
+    min-height: calc(100vh - 350px);
+}
+
+.cart-section h1 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.cart-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.cart-empty-message {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.cart-empty-message p {
+    font-size: 18px;
+    color: #7c7c7c;
+    margin-bottom: 20px;
+}
+
+#MainContent .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.quantity-input {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-input .quantity-button {
+    width: 30px;
+    height: 36px;
+    border: none;
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.quantity-input .quantity-button:hover {
+    background-color: #a7a7a7;
+}
+
+.quantity-input .quantity-button-minus {
+    border-radius: 4px 0 0 4px;
+}
+
+.quantity-input .quantity-button-plus {
+    border-radius: 0 4px 4px 0;
+}
+
+.quantity-input .quantity-button-minus:hover {
+    background-color: #a7a7a7;
+}
+
+.quantity-input .quantity-button-plus:hover {
+    background-color: #a7a7a7;
+}
+
+.quantity-input input {
+    height: 36px;
+    border-radius: 0;
+    width: 80px;
+    text-align: center;
+}
+
+.table .thead-light tr th{
+    background-color: #f8f9fa;
+}
