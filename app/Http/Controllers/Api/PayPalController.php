@@ -90,6 +90,7 @@ class PayPalController extends Controller
             // Chuyển sang VND, làm tròn về số nguyên
             $vndValue = (int) round($usdValue * $rate, 0);
 
+
             // xử lý lưu database
 //            $order = Order::query()->create([
 //                'customer_name' => $fullName,
