@@ -105,3 +105,8 @@ Route::group(['namespace'=>'Client','middleware' => ['checkLanguage']], function
 
 
 Route::get('/languages', 'LanguageController@index')->name('languages');
+
+Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
+    Route::post('/paypal/create-order', 'PayPalController@createOrder');
+    Route::post('/paypal/capture-order', 'PayPalController@captureOrder');
+});

@@ -43,4 +43,6 @@ return [
         'account_id' => env('CLOUDFLARE_ACCOUNT_ID'),
         'api_token' => env('CLOUDFLARE_IMAGES_API_TOKEN'),
     ],
+
+    'exchange_rate_vnd_usd' => env('EXCHANGE_RATE_VND_USD', 24000),
 ];

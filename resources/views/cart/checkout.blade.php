@@ -436,6 +436,46 @@
                                 <span class="previous-link__content">Tiếp tục mua sắm</span>
                             </a>
                         </div>
+
+                        <style>
+                            .separator {
+                                display: inline-block;
+                                position: relative;
+                                padding: 0 1rem;
+                                color: #6c757d;
+                                font-weight: 500;
+                                font-size: 1.2rem;
+                            }
+
+                            .separator::before,
+                            .separator::after {
+                                content: "";
+                                position: absolute;
+                                top: 50%;
+                                width: 30px;
+                                height: 1px;
+                                background: #dee2e6;
+                            }
+
+                            .separator::before {
+                                left: 0;
+                                transform: translateX(-100%);
+                            }
+
+                            .separator::after {
+                                right: 0;
+                                transform: translateX(100%);
+                            }
+                        </style>
+
+                        <div style="text-align: center">
+                            <span class="mx-3 separator">Hoặc thanh toán qua</span>
+                        </div>
+
+
+                        <div id="paypal-button-container" style="margin-top: 1rem;"></div>
+
+
                     </div>
                 </main>
                 <aside class="sidebar">
@@ -631,3 +671,109 @@
 </body>
 
 </html>
+
+<script>
+    window.PAYPAL_CLIENT_ID = "{{ config('paypal')[config('paypal.mode')]['client_id'] }}";
+</script>
+<script src="https://www.paypal.com/sdk/js?client-id={{ config('paypal')[config('paypal.mode')]['client_id'] }}&currency=USD"></script>
+
+
+<script>
+    window.cartItems = {!! json_encode(session('cart', [])) !!};
+    console.log(window.cartItems)
+    window.cartItemsObj = {!! json_encode(session('cart', [])) !!};
+    // Chuyển thành array
+    window.cartItems = Object.values(window.cartItemsObj);
+    // Tính tổng USD ngay trong Blade
+    window.cartTotalUSD = window.cartItems
+        .reduce((sum, item) => sum + parseFloat(item.price_usd) * parseInt(item.quantity), 0);
+
+
+</script>
+
+<script>
+    (function(){
+        const items = window.cartItems.map(item => ({
+            name: item.name,
+            sku: item.idOption.toString(),
+            description: `proId: ${item.idPro}`,
+            unit_amount: {
+                currency_code: 'USD',
+                value: parseFloat(item.price_usd).toFixed(2)
+            },
+            quantity: item.quantity.toString()
+        }));
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            paypal.Buttons({
+                style: { layout: 'vertical', color: 'blue', shape: 'pill' },
+
+                // 1. Gọi API /paypal/create-order để server tạo order và trả về orderID
+                createOrder: (data, actions) => {
+                    return fetch('/api/paypal/create-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token
+                        },
+                        body: JSON.stringify({
+                            items: items,
+                        })
+                    })
+                        .then(res => {
+                            if (!res.ok) throw new Error('Không thể kết nối server');
+                            return res.json();
+                        })
+                        .then(json => {
+                            if (!json.orderID) {
+                                console.error('Response thiếu orderID:', json);
+                                throw new Error('Không lấy được orderID');
+                            }
+                            return json.orderID;   // trả về đúng key từ server
+                        });
+                },
+
+                // 2. Khi user approve, capture trên PayPal rồi gọi API /paypal/capture-order
+                onApprove: (data, actions) => {
+                    return actions.order.capture().then(details => {
+                        return fetch('/api/paypal/capture-order', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token
+                            },
+                            body: JSON.stringify({
+                                orderID: data.orderID,
+                                details: details
+                            })
+                        })
+                            .then(res => {
+                                if (!res.ok) {
+                                    // lỗi HTTP 4xx/5xx
+                                    throw new Error('Lưu giao dịch thất bại, status: ' + res.status);
+                                }
+                                return res.json();
+                            }).then(json => {
+                                alert('Thanh toán thành công')
+                                console.log('Thanh toán thành công:', json);
+                                // window.location.href = '/dat-hang-thanh-cong';
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert(err.message || 'Xảy ra lỗi không xác định');
+                            });
+                    });
+                },
+
+                onError: err => {
+                    console.error('PayPal Error:', err);
+                    alert('Thanh toán thất bại, vui lòng thử lại.');
+                }
+
+            }).render('#paypal-button-container');
+        });
+
+    })();
+</script>
