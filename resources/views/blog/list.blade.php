@@ -148,7 +148,7 @@
                 <div class="col-lg-12">
                     <div class="swiper list-blog-slider">
                         <div class="swiper-wrapper">
-                            @foreach ($blogs as $category)
+                            @foreach ($categories as $category)
                                 <div class="swiper-slide blog-item">
                                     <a href="{{ route('listCateBlog', $category->slug) }}" class="blog-item-image">
                                         <img src="{{ url('' . $category->avatar) }}"

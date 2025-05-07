@@ -15,7 +15,7 @@
                 <h3>{{getLanguage('about_us')}}</h3>
                 <ul>
                     <li><a href="{{route('howItWorks')}}">{{getLanguage('how_esim_works')}}</a></li>
-                    <li><a href="{{route('aboutUs')}}">Sim Pingo</a></li>
+                    {{-- <li><a href="{{route('aboutUs')}}">Sim Pingo</a></li> --}}
                     <li><a href="{{route('allListBlog')}}">{{getLanguage('blogs')}}</a></li>
                     <li><a href="{{route('contactUs')}}">{{getLanguage('contact_us')}}</a></li>
 

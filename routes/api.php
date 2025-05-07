@@ -18,7 +18,7 @@ Route::group(['namespace'=>'Api','middleware' => 'api'],function(){
 	Route::post('login','AuthController@login');
 	Route::post('upload-image','AllController@uploadImage');
 	Route::post('upload-image-multi','AllController@uploadImageMulti');
-
+    Route::post('delete-image','AllController@deleteImage');
 });
 Route::group(['namespace'=>'Api','middleware'=>'auth:api'],function(){
 
