@@ -25,8 +25,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        // $schedule->job(new \App\Jobs\UpdateCurrencyRatesJob)->weeklyOn(1, '02:00');
-        $schedule->job(new \App\Jobs\UpdateCurrencyRatesJob)->everyMinute();
+        $schedule->job(new \App\Jobs\UpdateCurrencyRatesJob)->weeklyOn(1, '02:00');
+        // $schedule->job(new \App\Jobs\UpdateCurrencyRatesJob)->everyMinute();
     }
 
     /**
